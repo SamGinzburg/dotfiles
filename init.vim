@@ -37,6 +37,7 @@ call plug#begin()
 "   - Avoid using standard Vim directory names like 'plugin'
 
 if has('nvim')
+  Plug 'EdenEast/nightfox.nvim' "
   Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
   " 9000+ Snippets
   Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
@@ -49,7 +50,6 @@ endif
 
 call plug#end()
 
-
 let g:webdevicons_enable_nerdtree = 1
 
 " set up file-tree navigation
@@ -61,4 +61,7 @@ nnoremap <C-f> :NERDTreeFind<CR>
 " map close --> close buffer
 inoremap close bd
 
-autocmd VimEnter * COQnow -s
+if has('nvim')
+  autocmd VimEnter * COQnow -s
+  colorscheme nightfox
+endif
