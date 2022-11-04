@@ -37,13 +37,12 @@ call plug#begin()
 "   - Avoid using standard Vim directory names like 'plugin'
 
 if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+  Plug 'ms-jpq/coq_nvim', {'branch': 'coq'}
+  " 9000+ Snippets
+  Plug 'ms-jpq/coq.artifacts', {'branch': 'artifacts'}
   Plug 'preservim/nerdtree'
   Plug 'ryanoasis/vim-devicons'
 else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
   Plug 'preservim/nerdtree'
   Plug 'ryanoasis/vim-devicons'
 endif
@@ -52,15 +51,14 @@ call plug#end()
 
 
 let g:webdevicons_enable_nerdtree = 1
-let g:deoplete#enable_at_startup = 1
 
 " set up file-tree navigation
 noremap <leader>n :NERDTreeFocus<CR>
 nnoremap <C-n> :NERDTree<CR>
 nnoremap <C-t> :NERDTreeToggle<CR>
 nnoremap <C-f> :NERDTreeFind<CR>
-" open file tree but select the buffer
-autocmd VimEnter * NERDTree | wincmd p
 
 " map close --> close buffer
 inoremap close bd
+
+autocmd VimEnter * COQnow -s

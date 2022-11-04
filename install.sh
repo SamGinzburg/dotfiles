@@ -1,6 +1,7 @@
 mkdir -p ~/.config/nvim/
 cp init.vim ~/.config/nvim/init.vim
 cp init.vim ~/.vimrc
+cp .tmux.conf ~/.tmux.conf
 
 # install vim-plug
 # nvim
