@@ -18,5 +18,18 @@ git sparse-checkout add patched-fonts/JetBrainsMono
 ./install.sh JetBrainsMono
 cd ..
 
-# set terminal font
+# Install doom emacs
+# emacs-28+ must be installed first
+rm -rf ~/.config/emacs
+rm -rf ~/.config/doom
+git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs
+yes | ~/.config/emacs/bin/doom install
 
+# copy the config
+mkdir -p ~/.config/doom/
+cp doom-emacs/* ~/.config/doom/
+
+# doom sync
+~/.config/emacs/bin/doom sync
+echo 'export PATH=$HOME/.config/emacs/bin:$PATH' >> ~/.zshrc
+echo 'export PATH=$HOME/.config/emacs/bin:$PATH' >> ~/.bashrc
