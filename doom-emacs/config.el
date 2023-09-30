@@ -9,6 +9,16 @@
 (setq user-full-name "John Doe"
       user-mail-address "john@doe.com")
 
+
+;; only do syntax checking on open/save instead of incrementally
+(after! flycheck
+  (setq flycheck-check-syntax-automatically '(mode-enabled save)))
+
+;; chatgpt config
+(use-package! gptel
+ :config
+ (setq! gptel-api-key ""))
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
 ;; - `doom-font' -- the primary font to use
