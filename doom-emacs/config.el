@@ -8,16 +8,60 @@
 ;; clients, file templates and snippets. It is optional.
 (setq user-full-name "John Doe"
       user-mail-address "john@doe.com")
-
-
-;; only do syntax checking on open/save instead of incrementally
-(after! flycheck
-  (setq flycheck-check-syntax-automatically '(mode-enabled save)))
-
 ;; chatgpt config
 (use-package! gptel
  :config
  (setq! gptel-api-key ""))
+
+(require 'tex)
+
+;; compile latex pdf on save
+(defun latex-save-function ()
+  "Function to be executed when a LaTeX file is saved."
+  (when (and (eq major-mode 'latex-mode) (buffer-file-name))
+    (message "saved .tex file, now recompiling + re-displaying the PDF")
+    (TeX-command-run-all nil)
+    ;; Refresh the open pdf viewer
+    (let ((pdf-buffer (find-buffer-visiting (concat (file-name-sans-extension (buffer-file-name)) ".pdf"))))
+      (when pdf-buffer
+        (with-current-buffer pdf-buffer
+          (pdf-view-revert-buffer nil t))))
+  )
+)
+
+(add-hook 'after-save-hook 'latex-save-function)
+
+;; Change scroll behavior for PDFs, use arrow keys for left/right
+(defun pdf-view-scroll-left ()
+  "Scroll the PDF to the left."
+  (interactive)
+  (when (eq major-mode 'pdf-view-mode)
+    (image-backward-hscroll 10)))
+(defun pdf-view-scroll-right ()
+  "Scroll the PDF to the left."
+  (interactive)
+  (when (eq major-mode 'pdf-view-mode)
+    (image-forward-hscroll 10)))
+;; only define the left/right arrow key scrolling within evil mode + pdf view mode map
+(with-eval-after-load 'evil
+  (evil-define-key 'motion pdf-view-mode-map (kbd "<left>") 'pdf-view-scroll-left)
+  (evil-define-key 'motion pdf-view-mode-map (kbd "<right>") 'pdf-view-scroll-right)
+)
+
+;; Let auctex jump between the .tex file and PDF
+(setq TeX-source-correlate-mode t)
+(setq TeX-source-correlate-method 'synctex)
+
+;; set my default PDF viewer for auctex to be emacs pdf tools
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server t)
+
+;; default org-agenda dir
+(setq org-agenda-files '("~/org/research.org"))
+
+;; only do syntax checking on open/save instead of incrementally
+(after! flycheck
+  (setq flycheck-check-syntax-automatically '(mode-enabled save)))
 
 ;; Doom exposes five (optional) variables for controlling fonts in Doom:
 ;;
